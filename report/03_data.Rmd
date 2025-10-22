@@ -1,0 +1,7 @@
+# Data {#sec:data}
+
+Continuous downcast CTD data from the AZOMP was obtained by mission name, Table \@ref(tab:missionIds). Quality control flags were applied to the data when available. \textcolor{red}{Describe overall sampling timing}
+
+\textcolor{red}{Describe any nuances to sampling (introduction of stations, etc.)}
+
+\textcolor{red}{If using "season" boundaries, state which missions are outside of these definitions}

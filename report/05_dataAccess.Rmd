@@ -1,0 +1,5 @@
+# Data Access {#sec:dataaccess}
+
+The resulting data products from the report are, at the time of this publication, available through Open Government Portal. To request the data used to create the data products presented in this report, please contact  \href{mailto:DFO.BIODataServices-BIOServicesdeDonnees.MPO@dfo-mpo.gc.ca.}{BIO data shop}.
+
+The code to extract data and perform calculations, as well as necessary components to assemble the current document is made available in a Git repository \textcolor{red}{CITE}. This will facilitate reproducible calculations and documents for future reference periods.

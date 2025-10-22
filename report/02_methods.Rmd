@@ -1,0 +1,28 @@
+# Methods {#sec:methods}
+
+## Date ranges
+
+\textcolor{red}{Paragraph defining date ranges, if applicable. TBD}
+
+## Classifying transects and stations
+
+Prior to characterizing which station occupations belong to the AR7W transect and its stations, a methodology had to be developed. Using the station locations, Table \@ref(tab:stationCoordinates), a transect polygon was constructed, as well as polygons for each station. For the transect polygon, the first and last station was used to calculate the angle of the transect. A polygon with an arbitrarily chosen width of 14km was constructed. A polygon for each individual station was also created, these were aligned with the angle of the transect polygon. A width, here meaning along-slope, of 14km was used for consistency with the transect polygon, as well as for the length, here meaning cross-slope. In some cases, the stations are less than 14km km apart, therefore, to prevent overlap between station polygons, the inter-station distance was used for the length.
+
+## Minimum criteria
+
+The AZOMP is, relative to climate timescales, young, with program sampling occurring for most of the recent reference period (1991 to 2020). To ensure that each station’s climatology was calculated with adequate coverage, a minimum criterion was set. \textcolor{red}{The minimum of at least one occupation for any 10 years within the 30-year periods was used.} 
+
+## Vertical binning
+
+\textcolor{red}{TBD}
+
+Options :
+
+* World Ocean Atlas depth levels, see pg. 10 : https://repository.library.noaa.gov/view/noaa/70581
+* 10m, following Li and Harrison : http://waves-vagues.dfo-mpo.gc.ca/Library/354345.pdf
+* Something else.
+
+
+## Handling insufficient sampling
+
+\textcolor{red}{TBD}

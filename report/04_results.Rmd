@@ -1,0 +1,7 @@
+# Results {#sec:results}
+
+\textcolor{red}{ \textbf{QUESTION:} Summarize by region ? Labrador Shelf and Slope (AR7W-W), Central Labrador Basin (AR7W-C), Greenland Shelf and Slope (AR7W-E). See table 2 of https://waves-vagues.dfo-mpo.gc.ca/Library/354345.pdf for corresponding region for each station.}
+
+\textcolor{red}{Paragraph to summarize coverage of the stations.}
+
+\textcolor{red}{Reference to climatology profiles for each station}

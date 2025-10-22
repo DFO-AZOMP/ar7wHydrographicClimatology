@@ -1,0 +1,4 @@
+# Introduction {#sec:introduction}
+\textcolor{red}{Paragraph on AZOMP}
+
+For monitoring efforts, the World Meteorological Organization (WMO) recommends using reference period of years 1961 to 1990 as well as the most recent three decades [@wmo2017]. Since the inception of the AZOMP was much later than the proposed reference period, available data within some reasonably defined area for each station is sparse. Therefore, calculations using the reference period for years 1961 to 1990 will not be considered. Instead, the most recent overlapping three-decade periods, years 1991 to 2020, will be presented.

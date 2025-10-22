@@ -1,0 +1,24 @@
+# Tables {#sec:tables}
+
+(ref:tab-stationCoordinates) The AR7W stations and their associated coordinates in decimal degrees.
+
+```{r stationCoordinates, echo = FALSE, warning = FALSE, message = FALSE, results = 'asis'}
+path <- '../analysis'
+load(paste(path, 'ar7wStationPolygons.rda', sep = '/'))
+stations <- ar7wStationPolygons # re-name for ease
+stationName <- unlist(lapply(stations, '[[', 'stationName'))
+stationLon <- unlist(lapply(stations, '[[', 'longitude'))
+stationLat <- unlist(lapply(stations, '[[', 'latitude'))
+dftemp <- data.frame(station = stationName,
+                     longitude = stationLon,
+                     latitude = stationLat)
+# order by station number
+df <- dftemp[order(as.numeric(gsub('\\w+\\_(\\d+)', '\\1', dftemp[['station']]))), ]
+table <- data.frame(Name = gsub('_', '\\\\_', df[['station']]), # have to add '\\' in front of the underscore
+                    Longitude = df[['longitude']],
+                    Latitude = df[['latitude']])
+csasdown::csas_table(x = table,
+                     caption = "(ref:tab-stationCoordinates)",
+                     align = 'ccc',
+                     format = 'latex')
+```
