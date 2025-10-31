@@ -22,3 +22,70 @@ csasdown::csas_table(x = table,
                      align = 'ccc',
                      format = 'latex')
 ```
+
+(ref:tab-missionIds) The year and mission names, following the defined Bedford Institute of Oceanography convention for years 1993 to 2020. For year 1992, it is the CCHDO expocode for the mission. No entry in a given cell indicates that a mission did not occur.
+
+```{r missionIds, echo = FALSE, warning = FALSE, message = FALSE, results = 'asis'}
+library(xtable)
+library(oce)
+makeDirs <<- FALSE
+source('../analysis/00_setupFile.R')
+load(paste('../analysis', destDirData, 'ctdFiltered.rda', sep = '/'))
+
+fillTimeSeries <- function(x, xy){ # x is the variable, xy is the year in this case
+  dxy <- diff(xy)
+  if(any(dxy != 1)){
+    xnew <- x
+    xynew <- xy
+    idx <- 1:length(xy)
+    missing <- which(dxy != 1)
+    for(k in 1:length(missing)){
+      newidx <- missing[k] + seq(1, dxy[missing[k]] - 1, 1) / dxy[missing[k]]
+      addedyear <- xy[missing[k]] + seq(1, dxy[missing[k]] - 1, 1)
+      addvalue <- rep(NA, dxy[missing[k]] - 1)
+      xnew <- c(xnew, addvalue)
+      xynew <- c(xynew, addedyear)
+      idx <- c(idx, newidx)
+    }
+    o <- order(idx)
+    xnew <- xnew[o]
+    xynew <- xynew[o]
+  } else { # for those with no missing data
+    xnew <- x
+    xynew <- xy
+  }
+  return(list(x = xnew, xy = xynew))
+}
+
+startTime <- as.POSIXct(unlist(lapply(ctd, function(k) k[['startTime']])), origin = '1970-01-01', tz = 'UTC')
+mission <- unlist(lapply(ctd, function(k) k[['cruiseNumber']]))
+# replace '_' with '\\_' for tex
+mission <- gsub('\\_', '\\\\_', mission)
+df <- data.frame(time = startTime,
+                 year = as.POSIXlt(startTime)$year + 1900,
+                 mission = mission)
+k <- df[order(df[['time']]), ]
+umission <- unique(k[,names(k) %in% c('year', 'mission')])
+char <- t(apply(umission, 1, as.character))
+df <- as.data.frame(char);
+names(df) <- names(umission);
+dffill <- fillTimeSeries(x = df[['mission']], xy = as.numeric(df[['year']]));
+table <- data.frame(year = as.character(dffill$xy),
+                    mission = dffill$x);
+# replace 'NA' values with ""
+table[is.na(table)] <- ""
+# capitalize names
+capitalize <- function(x) {
+  s <- strsplit(x, " ")[[1]]
+  paste(toupper(substring(s, 1,1)), substring(s, 2),
+      sep="", collapse=" ")
+}
+names(table) <- sapply(names(table), capitalize)
+csasdown::csas_table(x = table,
+                     caption = "(ref:tab-missionIds)",
+                     align = 'cc',
+                     format = "latex",
+                     bold_header = FALSE # added textbf around table headers above
+                     #font_size = 8
+                     )
+```

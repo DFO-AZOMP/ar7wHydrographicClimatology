@@ -1,3 +1,3 @@
 # Acknowledgements {#sec:ackno}
 
-List acknowledgements
+The authors would like to thank the numerous chief scientists, technicians, CTD operators, and data managers who facilitated the collection and preservation of data throughout the years, as well as numerous ships officers and crew.

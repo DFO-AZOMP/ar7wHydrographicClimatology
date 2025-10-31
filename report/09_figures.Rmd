@@ -1,4 +1,6 @@
+\pagebreak
 # Figures {#sec:figures}
+
 ```{r analysisPath}
 path <- '../analysis'
 makeDirs <<- FALSE
@@ -7,18 +9,18 @@ figurePath <- paste(path,
                     gsub('\\.(.*)', '\\1', destDirFigures), sep = '/')
 ```
 
-(ref:fig-samplingTimeRange) Sampling time ranges, inferred from the date ranges from the CTD profiles, for the AZOMP missions.
+(ref:fig-map) Map of the AR7W core and half stations, black dots.
 
-```{r samplingTimeRange, fig.cap = "(ref:fig-samplingTimeRange)"}
+```{r map, fig.cap = "(ref:fig-map)", out.width="75%"}
 <<analysisPath>>
-knitr::include_graphics(path = paste(figurePath, '05_missionTimeRange.png', sep = '/'))
+knitr::include_graphics(path = paste(figurePath, '09_stationMap_ar7w.png', sep = '/'))
 ```
 
-(ref:fig-ar7wSamplingFrequency) Sampling frequency at each station. A light red filled box indicates that the station was not sampled, reiterated by the number zero in the box. A light green filled box indicates that the station was sampled the expected number of times, which is one. A dark green filled box indicates that the station was sampled more than the expected number of times with the total number of occupations indicated in the box. The number on the right axis indicates the number of years the station was sampled at least once. Station names in bold on the left axis indicates that the station has been sampled at least once for less than 10 years.
+(ref:fig-samplingTimeRange) Sampling date ranges, inferred from the CTD profiles, for the AR7W. Vertical black dashed lines indicates the defined date ranges, 01 May to 30 June, for the climatology.
 
-```{r ar7wSamplingFrequency, fig.cap = "(ref:fig-ar7wSamplingFrequency)", out.width="90%"}
+```{r samplingTimeRange, fig.cap = "(ref:fig-samplingTimeRange)", out.width="60%"}
 <<analysisPath>>
-knitr::include_graphics(path = paste(figurePath, '09_samplingFrequency_ar7w.png', sep = '/'))
+knitr::include_graphics(path = paste(figurePath, '05_missionTimeRange.png', sep = '/'))
 ```
 
 (ref:fig-ar7wSamplingTiming) The sampling timing of each station, colour coded by year.
@@ -28,3 +30,102 @@ knitr::include_graphics(path = paste(figurePath, '09_samplingFrequency_ar7w.png'
 knitr::include_graphics(path = paste(figurePath, '09_samplingTiming_ar7w.png', sep = '/'))
 ```
 
+(ref:fig-ar7wSamplingFrequency) Sampling frequency at each station. A light red filled box indicates that the station was not sampled, reiterated by the number zero in the box. A light green filled box indicates that the station was sampled the expected number of times, which is one. A dark green filled box indicates that the station was sampled more than the expected number of times with the total number of occupations indicated in the box. The number on the right axis indicates the number of years the station was sampled at least once followed by the number of years the station was occupied within the defined date ranges. Station names in bold on the left axis indicates that the station does not meet the minimum requirements.
+
+```{r ar7wSamplingFrequency, fig.cap = "(ref:fig-ar7wSamplingFrequency)", out.width="90%"}
+<<analysisPath>>
+knitr::include_graphics(path = paste(figurePath, '09_samplingFrequency_ar7w.png', sep = '/'))
+```
+
+
+<!-- AR7W-W -->
+
+```{r ar7wProfileWFigs}
+## copy these lines for each profile chunk
+<<analysisPath>>
+transect <- 'ar7w'
+figures <- list.files(path = figurePath, pattern = paste0('10_profileAndDifference_',transect,'_.*wData.png'), full.names = TRUE)
+station <- gsub(paste0('10_profileAndDifference_', transect, '_(.*)_wData\\.png'),'\\1', basename(figures))
+stationNumber <- as.numeric(gsub('AR7W', '', station))
+stationText <- gsub('(AR7W)(\\d+)', '\\1\\\\_\\2', station)
+##
+rnum <- as.numeric(gsub('^\\w+\\_(\\d+)', '\\1', regionStations[['labradorShelf']]))
+okr <- stationNumber %in% rnum
+o <- order(stationNumber[okr])
+rfigures <- figures[okr][o]
+rstation <- station[okr][o]
+rstationText <- stationText[okr][o]
+```
+
+```{r ar7wProfileW, fig.cap=paste(sprintf("\\label{%s}", paste(transect, rstation, sep = '_')), "Station", rstationText, "climatology profiles (thick lines) of temperature (left), salinity (middle), and density (right) with $\\pm$ 0.5 standard deviation (SD), indicated by shading, for the reference period 1991 to 2020 (blue). Thin lines, colour coded by year, are the data that were used to create the climatology profiles."),results='asis', message=FALSE, echo=FALSE, warning=FALSE}
+knitr::include_graphics(rfigures)
+```
+
+(ref:fig-ar7ww) The Labrador shelf, AR7W-W, 1991 to 2020 climatology of temperature (top), salinity (middle), and density (bottom). Black triangles indicate stations with respect to the distance along the transect. Station numbers are indicated above black triangles in the top row.
+
+```{r ar7ww, out.width = "75%", fig.cap = "(ref:fig-ar7ww)"}
+<<analysisPath>>
+knitr::include_graphics(path = paste(figurePath, '11_climatologyComparison_ar7w_labradorShelf.png', sep = '/'))
+```
+
+<!-- AR7W-C -->
+
+```{r ar7wProfileCFigs}
+## copy these lines for each profile chunk
+<<analysisPath>>
+transect <- 'ar7w'
+figures <- list.files(path = figurePath, pattern = paste0('10_profileAndDifference_',transect,'_.*wData.png'), full.names = TRUE)
+station <- gsub(paste0('10_profileAndDifference_', transect, '_(.*)_wData\\.png'),'\\1', basename(figures))
+stationNumber <- as.numeric(gsub('AR7W', '', station))
+stationText <- gsub('(AR7W)(\\d+)', '\\1\\\\_\\2', station)
+##
+okcstn <- !regionStations[['full']] %in% c(regionStations[['labradorShelf']], regionStations[['greenlandShelf']])
+cstn <- regionStations[['full']][okcstn]
+rnum <- as.numeric(gsub('^\\w+\\_(\\d+)', '\\1', cstn))
+okr <- stationNumber %in% rnum
+o <- order(stationNumber[okr])
+rfigures <- figures[okr][o]
+rstation <- station[okr][o]
+rstationText <- stationText[okr][o]
+```
+
+```{r ar7wProfileC, fig.cap=paste(sprintf("\\label{%s}", paste(transect, rstation, sep = '_')), "Station", rstationText, "climatology profiles (thick lines) of temperature (left), salinity (middle), and density (right) with $\\pm$ 0.5 standard deviation (SD), indicated by shading, for the reference period 1991 to 2020 (blue). Thin lines, colour coded by year, are the data that were used to create the climatology profiles."),results='asis', message=FALSE, echo=FALSE, warning=FALSE}
+knitr::include_graphics(rfigures)
+```
+
+(ref:fig-ar7wc) The Central Labrador sea, AR7W-C, with the inclusion of AR7W-W and AR7W-E, 1991 to 2020 climatology of temperature (top), salinity (middle), and density (bottom). Black triangles indicate stations with respect to the distance along the transect. Station numbers are indicated above black triangles in the top row.
+
+```{r ar7wc, out.width = "75%", fig.cap = "(ref:fig-ar7wc)"}
+<<analysisPath>>
+knitr::include_graphics(path = paste(figurePath, '11_climatologyComparison_ar7w_full.png', sep = '/'))
+```
+
+<!-- AR7W-E -->
+
+```{r ar7wProfileEFigs}
+## copy these lines for each profile chunk
+<<analysisPath>>
+transect <- 'ar7w'
+figures <- list.files(path = figurePath, pattern = paste0('10_profileAndDifference_',transect,'_.*wData.png'), full.names = TRUE)
+station <- gsub(paste0('10_profileAndDifference_', transect, '_(.*)_wData\\.png'),'\\1', basename(figures))
+stationNumber <- as.numeric(gsub('AR7W', '', station))
+stationText <- gsub('(AR7W)(\\d+)', '\\1\\\\_\\2', station)
+##
+rnum <- as.numeric(gsub('^\\w+\\_(\\d+)', '\\1', regionStations[['greenlandShelf']]))
+okr <- stationNumber %in% rnum
+o <- order(stationNumber[okr])
+rfigures <- figures[okr][o]
+rstation <- station[okr][o]
+rstationText <- stationText[okr][o]
+```
+
+```{r ar7wProfileE, fig.cap=paste(sprintf("\\label{%s}", paste(transect, rstation, sep = '_')), "Station", rstationText, "climatology profiles (thick lines) of temperature (left), salinity (middle), and density (right) with $\\pm$ 0.5 standard deviation (SD), indicated by shading, for the reference period 1991 to 2020 (blue). Thin lines, colour coded by year, are the data that were used to create the climatology profiles."),results='asis', message=FALSE, echo=FALSE, warning=FALSE}
+knitr::include_graphics(rfigures)
+```
+
+(ref:fig-ar7we) The Greenland shelf, AR7W-E, 1991 to 2020 climatology of temperature (top), salinity (middle), and density (bottom). Black triangles indicate stations with respect to the distance along the transect. Station numbers are indicated above black triangles in the top row.
+
+```{r ar7we, out.width = "75%", fig.cap = "(ref:fig-ar7we)"}
+<<analysisPath>>
+knitr::include_graphics(path = paste(figurePath, '11_climatologyComparison_ar7w_greenlandShelf.png', sep = '/'))
+```

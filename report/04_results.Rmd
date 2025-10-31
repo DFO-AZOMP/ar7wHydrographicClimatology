@@ -1,7 +1,170 @@
 # Results {#sec:results}
 
-\textcolor{red}{ \textbf{QUESTION:} Summarize by region ? Labrador Shelf and Slope (AR7W-W), Central Labrador Basin (AR7W-C), Greenland Shelf and Slope (AR7W-E). See table 2 of https://waves-vagues.dfo-mpo.gc.ca/Library/354345.pdf for corresponding region for each station.}
+The date range of sampling AR7W is between early May and early August, with the timing being more variable between years 1993 and 2003 (Figures \@ref(fig:samplingTimeRange) and \@ref(fig:ar7wSamplingTiming)). Occupation between years 2004 and 2020 occurred during the month of May with the exception of years 2010, 2019, and 2020. The date ranges used to define the climatology excluded some missions from the calculations. This includes years 1995, part of 1998, 1999, 2002, 2003, and 2020.
 
-\textcolor{red}{Paragraph to summarize coverage of the stations.}
+```{r climtotals}
+path <- '../analysis'
+makeDirs <<- FALSE
+source(paste(path, '00_setupFile.R', sep = '/'))
+dataPath <- paste(path,
+                    gsub('\\.(.*)', '\\1', destDirData), sep = '/')
+file <- paste(dataPath, 'ar7w_totals_1991to2020.rda', sep = '/')
+load(file)
+climtotal <- climtotaldr
+load(file)
+constructText <- function(d, which){
+  if(which == 'min'){
+    m <- min(d)
+  }
+  if(which == 'max'){
+    m <- max(d)
+  }
+  mstns <- gsub('\\_', '\\\\_', names(d)[which(d == m)])
+  endidx <- ifelse(length(mstns) > 2,
+                   length(mstns) - 1,
+                   ifelse(length(mstns) == 2,
+                          2,
+                          1))
+  mstnstext <- paste0(ifelse(length(mstns) > 1, 'stations ', 'station '),
+                       paste(mstns[1:endidx], collapse = ifelse(length(mstns) == 2, ' and ', ', ')),
+                      ifelse(length(mstns) > 2, paste0(', and ', mstns[length(mstns)]), ''))
+  return(list(value = m, text = mstnstext))
+}
+# labrador shelf AR7W-W
+wtotal <- climtotal[names(climtotal) %in% regionStations[['labradorShelf']]]
+wstnnum <- as.numeric(gsub('^\\w+\\_(\\d+)', '\\1', names(wtotal)))
+okint <- round(wstnnum) == wstnnum
+wtotalcore <- wtotal[okint]
+wmin <- constructText(d = wtotalcore, which = 'min')
+wmax <- constructText(d = wtotalcore, which = 'max')
+# greenland shelf AR7W-E
+etotal <- climtotal[names(climtotal) %in% regionStations[['greenlandShelf']]]
+estnnum <- as.numeric(gsub('^\\w+\\_(\\d+)', '\\1', names(etotal)))
+okint <- round(estnnum) == estnnum
+etotalcore <- etotal[okint]
+emin <- constructText(d = etotalcore, which = 'min')
+emax <- constructText(d = etotalcore, which = 'max')
+# central AR7W-C
+## get stations, they are those not in W and E
+okcstn <- !regionStations[['full']] %in% c(regionStations[['labradorShelf']], regionStations[['greenlandShelf']])
+cstn <- regionStations[['full']][okcstn]
+ctotal <- climtotal[names(climtotal) %in% cstn]
+cstnnum <- as.numeric(gsub('^\\w+\\_(\\d+)', '\\1', names(ctotal)))
+okint <- round(cstnnum) == cstnnum
+ctotalcore <- ctotal[okint]
+cmin <- constructText(d = ctotalcore, which = 'min')
+cmax <- constructText(d = ctotalcore, which = 'max')
+```
 
-\textcolor{red}{Reference to climatology profiles for each station}
+## AR7W-W
+
+On the Labrador shelf, AR7W-W, the median number of years a core station was sampled during the 30-year climatology reference period is `r median(wtotalcore)`, with a minimum number of `r wmin$value` years occupied  at `r wmin$text`, and a maximum of `r wmax$value` at `r wmax$text` (Figure \@ref(fig:ar7wSamplingFrequency)). The coverage along the Labrador shelf is generally lower due to the presence of sea ice.
+
+```{r ar7wfigrefs}
+# NOTE : this is the same code for the Figures
+## copy these lines for each profile chunk
+<<analysisPath>>
+transect <- 'ar7w'
+figures <- list.files(path = figurePath, pattern = paste0('10_profileAndDifference_',transect,'_.*wData.png'), full.names = TRUE)
+station <- gsub(paste0('10_profileAndDifference_', transect, '_(.*)_wData\\.png'),'\\1', basename(figures))
+stationNumber <- as.numeric(gsub('AR7W', '', station))
+stationText <- gsub('(AR7W)(\\d+)', '\\1\\\\_\\2', station)
+##
+rnum <- as.numeric(gsub('^\\w+\\_(\\d+)', '\\1', regionStations[['labradorShelf']]))
+okr <- stationNumber %in% rnum
+o <- order(stationNumber[okr])
+rfigures <- figures[okr][o]
+rstation <- station[okr][o]
+rstationText <- stationText[okr][o]
+endidx <- ifelse(length(rstation) > 2,
+                 length(rstation) - 1,
+                 ifelse(length(rstation) == 2,
+                        2,
+                        1))
+figreftext <- paste(rstationText, 
+                    paste0('(Figure \\ref{', 
+                           paste(transect, rstation, sep = '_'),
+                           '})'))
+text <- paste0(paste(figreftext[1:endidx], collapse = ifelse(length(figreftext) == 2, 
+                                                             ' and ', 
+                                                             ', ')),
+                    ifelse(length(figreftext) > 2, paste0(', and ', figreftext[length(figreftext)]), ''))
+```
+
+Climatology profiles for stations `r text` are presented. Also, the climatology is presented as a section in Figure \@ref(fig:ar7ww).
+
+## AR7W-C
+
+In the central Labrador sea, AR7W-C, the median number of years a core station was sampled during the 30-year climatology reference period is `r median(ctotalcore)`, with a minimum number of `r cmin$value` years occupied  at `r cmin$text`, and a maximum of `r cmax$value` at `r cmax$text` (Figure \@ref(fig:ar7wSamplingFrequency)).
+
+```{r ar7cfigrefs}
+# NOTE : this is the same code for the Figures
+## copy these lines for each profile chunk
+<<analysisPath>>
+transect <- 'ar7w'
+figures <- list.files(path = figurePath, pattern = paste0('10_profileAndDifference_',transect,'_.*wData.png'), full.names = TRUE)
+station <- gsub(paste0('10_profileAndDifference_', transect, '_(.*)_wData\\.png'),'\\1', basename(figures))
+stationNumber <- as.numeric(gsub('AR7W', '', station))
+stationText <- gsub('(AR7W)(\\d+)', '\\1\\\\_\\2', station)
+##
+okcstn <- !regionStations[['full']] %in% c(regionStations[['labradorShelf']], regionStations[['greenlandShelf']])
+cstn <- regionStations[['full']][okcstn]
+rnum <- as.numeric(gsub('^\\w+\\_(\\d+)', '\\1', cstn))
+okr <- stationNumber %in% rnum
+o <- order(stationNumber[okr])
+rfigures <- figures[okr][o]
+rstation <- station[okr][o]
+rstationText <- stationText[okr][o]
+endidx <- ifelse(length(rstation) > 2,
+                 length(rstation) - 1,
+                 ifelse(length(rstation) == 2,
+                        2,
+                        1))
+figreftext <- paste(rstationText, 
+                    paste0('(Figure \\ref{', 
+                           paste(transect, rstation, sep = '_'),
+                           '})'))
+text <- paste0(paste(figreftext[1:endidx], collapse = ifelse(length(figreftext) == 2, 
+                                                             ' and ', 
+                                                             ', ')),
+                    ifelse(length(figreftext) > 2, paste0(', and ', figreftext[length(figreftext)]), ''))
+```
+
+Climatology profiles for stations `r text` are presented. Also, the climatology is presented as a section in Figure \@ref(fig:ar7wc).
+
+## AR7W-E
+
+On the Greenland shelf, AR7W-E, the median number of years a core station was sampled during the 30-year climatology reference period is `r median(etotalcore)`, with a minimum number of `r emin$value` years occupied  at `r emin$text`, and a maximum of `r emax$value` at `r emax$text` (Figure \@ref(fig:ar7wSamplingFrequency)). 
+
+```{r ar7efigrefs}
+# NOTE : this is the same code for the Figures
+## copy these lines for each profile chunk
+<<analysisPath>>
+transect <- 'ar7w'
+figures <- list.files(path = figurePath, pattern = paste0('10_profileAndDifference_',transect,'_.*wData.png'), full.names = TRUE)
+station <- gsub(paste0('10_profileAndDifference_', transect, '_(.*)_wData\\.png'),'\\1', basename(figures))
+stationNumber <- as.numeric(gsub('AR7W', '', station))
+stationText <- gsub('(AR7W)(\\d+)', '\\1\\\\_\\2', station)
+##
+rnum <- as.numeric(gsub('^\\w+\\_(\\d+)', '\\1', regionStations[['greenlandShelf']]))
+okr <- stationNumber %in% rnum
+o <- order(stationNumber[okr])
+rfigures <- figures[okr][o]
+rstation <- station[okr][o]
+rstationText <- stationText[okr][o]
+endidx <- ifelse(length(rstation) > 2,
+                 length(rstation) - 1,
+                 ifelse(length(rstation) == 2,
+                        2,
+                        1))
+figreftext <- paste(rstationText, 
+                    paste0('(Figure \\ref{', 
+                           paste(transect, rstation, sep = '_'),
+                           '})'))
+text <- paste0(paste(figreftext[1:endidx], collapse = ifelse(length(figreftext) == 2, 
+                                                             ' and ', 
+                                                             ', ')),
+                    ifelse(length(figreftext) > 2, paste0(', and ', figreftext[length(figreftext)]), ''))
+```
+
+Climatology profiles for stations `r text` are presented. Also, the climatology is presented as a section in Figure \@ref(fig:ar7we).

@@ -26,7 +26,7 @@ french_address: |
 phone: "(555) 555-5555"
 author_footnote: "Email:Chantelle.Layton@dfo-mpo.gc.ca # | telephone: (250) 756-5555"
 abstract: |
-  Here is the abstract text. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  The hydrographic 1991 to 2020 climatology for the Maritimes region Atlantic Zone Off-Shelf Monitoring Program AR7W transect is calculated to support annual reporting on variability. Details on data coverage for AR7W and a brief summary on the results are provided.
 french_abstract: |
   Voici le résumé. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 # `show_continued_text` is a logical which, if `true`, places
