@@ -38,29 +38,31 @@ minN <- 10
 # define depth bins
 ####
 ## 10m
-bin <- seq(10, 4000, 10)
-tolerance <- rep(5, length(bin))
+# bin <- seq(10, 4000, 10)
+# tolerance <- rep(5, length(bin))
 ## woa
-# bin <- list(seq(0, 100, 5),
-#          seq(125, 500, 25),
-#          seq(550, 2000, 50),
-#          seq(2100, 4000, 100))
-# tolerance <- lapply(bin, function(k) {d <- diff(k)/2; c(d[1], d)})
-# bin <- do.call('c', bin)
-# tolerance <- do.call('c', tolerance)
+bin <- list(seq(15, 100, 5),
+         seq(125, 500, 25),
+         seq(550, 2000, 50),
+         seq(2100, 4000, 100))
+tolerance <- lapply(bin, function(k) {d <- diff(k)/2; c(d[1], d)})
+bin <- do.call('c', bin)
+tolerance <- do.call('c', tolerance)
 transectDepthBins <- data.frame(bin = bin,
                                 tolerance = tolerance)
 ####
 # subset to only core stations, aka not 'half' stations
+# decision : keep all stations, implement min number of occupations
 ####
-stnName <- lapply(stations, '[[', 'stationName')
-stnNumber <- lapply(stnName, function(k) as.numeric(gsub('\\w+_(\\w+)', '\\1', k)))
-iscore <- unlist(lapply(stnNumber, function(k) k == round(k)))
-stations <- stations[iscore]
+# stnName <- lapply(stations, '[[', 'stationName')
+# stnNumber <- lapply(stnName, function(k) as.numeric(gsub('\\w+_(\\w+)', '\\1', k)))
+# iscore <- unlist(lapply(stnNumber, function(k) k == round(k)))
+# stations <- stations[iscore]
 
 # get some important meta for knowing which profile belongs to which
 startTime <- as.POSIXct(unlist(lapply(ctd, function(k) k[['startTime']])), origin = '1970-01-01', tz = 'UTC')
 startYear <- as.POSIXlt(startTime)$year + 1900
+startMonth <- as.POSIXlt(startTime)$mon + 1
 transects <- unlist(lapply(ctd, function(k) k[['transect']]))
 dataType <- unlist(lapply(ctd, function(k) k[['dataType']]))
 station <- unlist(lapply(ctd, function(k) k[['stationName']]))
@@ -69,12 +71,18 @@ df <- data.frame(transect = transects,
                  station = station,
                  dataType = dataType,
                  startTime = startTime,
-                 year = startYear)
+                 year = startYear,
+                 month = startMonth)
 # remove instances where no transect was detected
 df <- df[!is.na(df[['transect']]), ]
 df <- df[df[['transect']] != FALSE, ]
 # remove instances where no station was detected
 df <- df[df[['station']] != FALSE, ]
+###
+# 'season'
+###
+# only want data collected between May 01 to July 01, so we'll look for data in months 5 and 6
+df <- df[df[['month']] %in% c(5, 6), ]
 # create lookup table for climatology calculations
 coreTransects <- c('ar7w')
 lookdf <- data.frame(transect = coreTransects)
@@ -243,12 +251,35 @@ for(it in 1:dim(lookdf)[1]){
     ddlat <- unlist(lapply(tranCtd, function(k) k[['latitude']]))
     o <- order(ddlon)
     tranCtd <- tranCtd[o]
+    # define values for smoothing section (need it for creating fake profile)
+    factor <- 2.0 # guess
+    distance <- geodDist(longitude1 = ddlon[o],
+                         latitude1 = ddlat[o],
+                         longitude2 = ddlon[o][1],
+                         latitude2 = ddlat[o][1])
+    xr <- mround(median(diff(distance))/2, 5, type = 'ceiling') * factor
+    yr <- 10
+    # add fake station at the end for nicer interpolation
+    a <- getTransectAngle(longitude = unlist(lapply(tranCtd[(length(tranCtd)-1):length(tranCtd)], function(k) k[['longitude']][1])),
+                          latitude = unlist(lapply(tranCtd[(length(tranCtd)-1):length(tranCtd)], function(k) k[['latitude']][1])))
+    angle <- a$angle
+    eastingadd <- ((xr/3) * 1000) * cos(angle * pi/180) # not sure of factor in front of xr, changed xr to fixed distance, xr/2
+    northingadd <- ((xr/3) * 1000) * sin(angle * pi/180) # not sure of factor in front of xr, changed xr to fixed distance, xr/2
+    faked <- tranCtd[[length(tranCtd)]]
+    zone <- lonlat2utm(longitude = faked[['longitude']][1],
+                       latitude = faked[['latitude']][1])$zone
+    utm <- lonlat2utm(longitude = faked[['longitude']][1],
+                      latitude = faked[['latitude']], zone = zone)
+    fakelonlat <- utm2lonlat(easting = utm$easting + eastingadd,
+                             northing = utm$northing + northingadd,
+                             zone = zone)
+    faked[['longitude']] <- fakelonlat$longitude
+    faked[['latitude']] <- fakelonlat$latitude
+    tranCtd <- c(tranCtd, faked)
     # # create section and barnes interpolate
     s <- as.section(tranCtd)
     sg <- sectionGrid(s)
-    factor <- 2.0 # guess
-    xr <- mround(median(diff(sg[['distance', 'byStation']]))/2, 5, type = 'ceiling') * factor
-    yr <- 10
+    # set parameters for interpolation
     xgrid <- seq(0, ceiling(max(sg[['distance', 'byStation']])) + 1.5*xr, by = xr/2)
     # have to add the is.na part to not interpolate farther down than measurements
     ygrid <- seq(5, ceiling(max(sg[['pressure']][!is.na(sg[['temperature']])])), by = yr/2)
@@ -274,7 +305,6 @@ for(it in 1:dim(lookdf)[1]){
     } else {
       missingDf <- data.frame(station = missingStn,
                               climYear = missingStnClimMinYear,
-                              season = seasonlook,
                               transect = transectlook)
       if(fillWithSmooth){
         for(ims in 1:length(missingStn)){
@@ -342,6 +372,23 @@ for(it in 1:dim(lookdf)[1]){
           o <- order(ddlon)
         }
         tranCtd <- tranCtd[o]
+        # add fake station at the end for nicer interpolation
+        a <- getTransectAngle(longitude = unlist(lapply(tranCtd[(length(tranCtd)-1):length(tranCtd)], function(k) k[['longitude']][1])),
+                              latitude = unlist(lapply(tranCtd[(length(tranCtd)-1):length(tranCtd)], function(k) k[['latitude']][1])))
+        angle <- a$angle
+        eastingadd <- ((xr/3) * 1000) * cos(angle * pi/180) # not sure of factor in front of xr, changed xr to fixed distance, xr/2
+        northingadd <- ((xr/3) * 1000) * sin(angle * pi/180) # not sure of factor in front of xr, changed xr to fixed distance, xr/2
+        faked <- tranCtd[[length(tranCtd)]]
+        zone <- lonlat2utm(longitude = faked[['longitude']][1],
+                           latitude = faked[['latitude']][1])$zone
+        utm <- lonlat2utm(longitude = faked[['longitude']][1],
+                          latitude = faked[['latitude']], zone = zone)
+        fakelonlat <- utm2lonlat(easting = utm$easting + eastingadd,
+                                 northing = utm$northing + northingadd,
+                                 zone = zone)
+        faked[['longitude']] <- fakelonlat$longitude
+        faked[['latitude']] <- fakelonlat$latitude
+        tranCtd <- c(tranCtd, faked)
         # # create section and barnes interpolate
         s <- as.section(tranCtd)
         sg <- sectionGrid(s)
@@ -355,13 +402,17 @@ for(it in 1:dim(lookdf)[1]){
         ss <- sectionSmooth(sg, method = 'barnes', xg = xgrid, yg = ygrid, xr = xr, yr = yr)
       }
     } # closes create missing station data.frame
+    # remove last station from section smooth to get nicer xlim
+    # ssstn <- ss@data$station
+    # ssstn <- ssstn[-length(ssstn)]
+    # ss@data$station <- ssstn
     # save info
     climatology[[it]][['transect']] <- transectlook
     climatology[[it]][['longitude0']] <- longitude0
     climatology[[it]][['latitude0']] <- latitude0
     climatology[[it]][['ylim']] <- ylim
     climatology[[it]][['xlim']] <- c(0, max(transectDistance))
-    climatology[[it]][['avgProfiles']] <- tranCtd
+    climatology[[it]][['avgProfiles']] <- tranCtd[-length(tranCtd)]
     climatology[[it]][['section']] <- s
     climatology[[it]][['sectionGrid']] <- sg
     climatology[[it]][['sectionSmooth']] <- ss
@@ -374,7 +425,6 @@ for(it in 1:dim(lookdf)[1]){
               'for', programlook), sep = '\n')
     missingDf <- data.frame(station = missingStn,
                             climYear = missingStnClimMinYear,
-                            season = seasonlook,
                             transect = transectlook)
     climatology[[it]][['transect']] <- transectlook
     climatology[[it]][['longitude0']] <- NA
