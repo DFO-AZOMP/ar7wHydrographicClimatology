@@ -52,13 +52,25 @@ badfiles <- paste(arcPath,
                     "1996/CTD_96999_003_002_DN.ODF" # variable names bad
                   ),
                   sep = '/')
+# define station numbers for each region
+stnNumberFull <- c(seq(1, 28), seq(10.5, 28.5, 1))
+stnNumberFull <- stnNumberFull[order(stnNumberFull)]
+stnNumberLS <- seq(1, 10)
+stnNumberGS <- c(seq(24,28), seq(24.5, 28.5, 1))
+stnNumberGS <- stnNumberGS[order(stnNumberGS)]
+regionStations <- list('full' = paste('AR7W', ifelse(stnNumberFull < 10, paste0('0', stnNumberFull), stnNumberFull), sep = '_'),
+                       'labradorShelf' = paste('AR7W', ifelse(stnNumberLS < 10, paste0('0', stnNumberLS), stnNumberLS), sep = '_'),
+                       'greenlandShelf' = paste('AR7W', ifelse(stnNumberGS < 10, paste0('0', stnNumberGS), stnNumberGS), sep = '_'))
 # define some information for plotting
 limits <- list('full' = list(theta = c(1.5, 5),
                              salinity = c(34.6, 35),
                              sigmaTheta = c(27.5, 27.95)),
                'labradorShelf' = list(theta = c(-2, 5),
                                       salinity = c(32, 35),
-                                      sigmaTheta = c(25.5, 27.95))
+                                      sigmaTheta = c(25.5, 27.95)),
+                'greenlandShelf' = list(theta = c(-2, 5),
+                                        salinity = c(32, 35),
+                                        sigmaTheta = c(25.5, 27.95))
 )
 
 contourLevels <- list('full' = list(theta = seq(1.5, 5, 0.5),
@@ -66,9 +78,15 @@ contourLevels <- list('full' = list(theta = seq(1.5, 5, 0.5),
                                     sigmaTheta = seq(27.5, 27.95, 0.05)),
                       'labradorShelf' = list(theta = seq(-2, 5, 1),
                                              salinity = seq(32, 35, 0.5),
-                                             sigmaTheta = seq(25.5, 27.95, 0.50))
-)
+                                             sigmaTheta = seq(25.5, 27.95, 0.50)
+                                             ),
+                      'greenlandShelf' = list(theta = seq(-2, 5, 1),
+                                              salinity = seq(32, 35, 0.5),
+                                              sigmaTheta = seq(25.5, 27.95, 0.50))
+                      )
 contourLevelLimits <- limits # the same for now
 transectPlotLimits <- list(limits = limits,
                            contourLevels = contourLevels,
                            contourLevelLimits = contourLevelLimits)
+regionylim <- list('labradorShelf' = c(0, 400),
+                   'greenlandShelf' = c(0, 400))
