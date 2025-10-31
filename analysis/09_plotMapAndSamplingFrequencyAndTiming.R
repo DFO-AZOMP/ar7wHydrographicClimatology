@@ -16,6 +16,7 @@ load(paste(destDirData, 'ctdFiltered.rda', sep = '/'))
 # get some important meta for knowing which profile belongs to which
 startTime <- as.POSIXct(unlist(lapply(ctd, function(k) k[['startTime']])), origin = '1970-01-01', tz = 'UTC')
 startYear <- as.POSIXlt(startTime)$year + 1900
+startMonth <- as.POSIXlt(startTime)$mon + 1
 transects <- unlist(lapply(ctd, function(k) k[['transect']]))
 dataType <- unlist(lapply(ctd, function(k) k[['dataType']]))
 station <- unlist(lapply(ctd, function(k) k[['stationName']]))
@@ -25,13 +26,18 @@ df <- data.frame(transect = transects,
                  station = station,
                  dataType = dataType,
                  startTime = startTime,
-                 year = startYear)
+                 year = startYear,
+                 month = startMonth)
 df <- df[df[['year']] %in% 1991:2020, ]
 # remove instances where no transect was detected
 df <- df[!is.na(df[['transect']]), ]
 df <- df[df[['transect']] != FALSE, ]
 # remove instances where a profile was not associated with a station
 df <- df[df[['station']] != FALSE, ]
+
+## create separate df for the date range subset
+# only want data collected between May 01 to July 01, so we'll look for data in months 5 and 6
+dfdr <- df[df[['month']] %in% c(5, 6), ]
 
 # split by transect, then station
 # this is just for a visual check
@@ -41,6 +47,8 @@ sdf <- lapply(split(df, df[['transect']]), function(k) split(k, k[['station']]))
 
 # make a table by transect, and station
 tbl <- lapply(split(df, df[['transect']]), function(k) {totable <- data.frame(station = k[['station']], year = factor(k[['year']], 1991:2020));
+table(totable)})
+tbldr <- lapply(split(dfdr, dfdr[['transect']]), function(k) {totable <- data.frame(station = k[['station']], year = factor(k[['year']], 1991:2020));
 table(totable)})
 
 # now plot number of stations per season, per transect, per station
@@ -127,6 +135,8 @@ for(i in 1:length(tbl)){
           labels = stnlab[!okidx],
           pos = 2,
           cex = 4/5)
+  ## scale bar
+  mapScalebar('topleft', length = 200)
   dev.off()
   png(paste(destDirFigures,
             paste0(paste('09_samplingFrequency',
@@ -137,8 +147,9 @@ for(i in 1:length(tbl)){
       width = 6, height = 6, units = 'in', # portrait
       #width = 8, height = 4.5, units = 'in', # landscape
       pointsize = 8, res = 250)
-  par(oma = c(0, 3, 0, 1.5))
+  par(oma = c(0, 4.5, 0, 3))
   d <- tbl[[i]]
+
   dstn <- sdf[[which(names(sdf) == names(tbl)[i])]]
   dd <- t(d)
   stnnum <- as.numeric(gsub('\\w+_(\\w+)', '\\1', colnames(dd)))
@@ -162,19 +173,49 @@ for(i in 1:length(tbl)){
        labels = as.vector(dd),
        col = ifelse(as.vector(dd) > 1, 'white', 'black'),
        cex = 4/5)
-  # get total number of profiles for 1991 to 2020 climatology
+  # get total number of profiles for 1991 to 2020 climatology and label on axis=4
   ddtotyear <- dd
   ddtotyear[ddtotyear > 1] <- 1
   climtotal <- apply(ddtotyear[x %in% 1991:2020, ], 2, sum)
-  mtext(text = paste(climtotal, sep = ','), side = 4, at = y, las = 1, line = 0.25)
+  # get number within subsetted date range
+  ddr <- tbldr[[i]]
+  dddr <- t(ddr)
+  stnnumdr <- as.numeric(gsub('\\w+_(\\w+)', '\\1', colnames(dddr)))
+  odr <- order(stnnumdr)
+  dddrtotyear <- dddr[,odr] # skipping one step followed by regular data
+  dddrtotyear[dddrtotyear > 1] <- 1
+  climtotaldr <- apply(dddrtotyear[x %in% 1991:2020, ], 2, sum)
+  mtext(text = paste(climtotal, climtotaldr, sep = ','), side = 4, at = y, las = 1, line = 0.25)
+  # box
   box()
+  # grid
   abline(h = y + 0.5)
   abline(v = x + 0.5)
+  # x-axis
   axis(1)
-  axis(2, at = y, labels = FALSE)
-  mtext(text = colnames(dd), side = 2, at = y, las = 1, font = ifelse(climtotal < 10, 2, 1), line = 0.85)
-  # x-axis label
+  ##label
   mtext(side = 1, text = 'Year', line = 1.8)
+  # y-axis
+  axis(2, at = y, labels = FALSE)
+  ## station labels
+  mtext(text = colnames(dd), side = 2, at = y, las = 1, font = ifelse(climtotaldr < 10, 2, 1), line = 0.85) # bold based on date range restriction
+  ## add outside axis for region labels
+  ### iterate through each region
+  for(ir in 1:length(regionStations)){
+    if(names(regionStations)[ir] == 'full'){
+      lookstn <- regionStations[['full']][!regionStations[['full']] %in% c(regionStations[['labradorShelf']], regionStations[['greenlandShelf']])]
+    } else {
+      lookstn <- regionStations[[ir]]
+    }
+    okdd <- which(colnames(dd) %in% lookstn)
+    axis(side = 2, at = range(okdd), line = 6, label = FALSE, lwd.tick=0)
+    name <- switch(names(regionStations)[ir],
+                   'full' = 'AR7W-C',
+                   'labradorShelf' = 'AR7W-W',
+                   'greenlandShelf' = 'AR7W-E')
+    mtext(text = name, side = 2, line = 6.5, at = mean(range(okdd)))
+  }
+
   dev.off()
   # plot sampling timing
   png(paste(destDirFigures,
@@ -242,4 +283,9 @@ for(i in 1:length(tbl)){
   drawPalette(breaks = breaks, zlab = ' ', pos = 3, labels = breaks, at = breaks)
   mtext(text = 'Year', side = 3, line = 2.8)
   dev.off()
+  # bad to do it where a figure is created as it should be a calculations thing, but OK
+  ## save clim totals for report
+  save(climtotaldr, file = paste(destDirData,
+                              paste0(paste(names(tbl)[i], 'totals', paste(c(1991,2020), collapse = 'to'), sep = '_'), '.rda'),
+                              sep = '/'))
 }
