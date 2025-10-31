@@ -63,3 +63,10 @@ analysis/data
 # specific files that define sensitive info
 analysis/00_arcPath.R
 analysis/00_databaseInfo.R
+
+# and word docs
+*.docx
+*.doc
+
+# auto initialized .csl files for report
+*.csl
