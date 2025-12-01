@@ -62,17 +62,18 @@ regionStations <- list('full' = paste('AR7W', ifelse(stnNumberFull < 10, paste0(
                        'labradorShelf' = paste('AR7W', ifelse(stnNumberLS < 10, paste0('0', stnNumberLS), stnNumberLS), sep = '_'),
                        'greenlandShelf' = paste('AR7W', ifelse(stnNumberGS < 10, paste0('0', stnNumberGS), stnNumberGS), sep = '_'))
 # define some information for plotting
+## overall limits
 limits <- list('full' = list(theta = c(1.5, 5),
                              salinity = c(34.6, 35),
                              sigmaTheta = c(27.5, 27.95)),
                'labradorShelf' = list(theta = c(-2, 5),
                                       salinity = c(32, 35),
                                       sigmaTheta = c(25.5, 27.95)),
-                'greenlandShelf' = list(theta = c(-2, 5),
-                                        salinity = c(32, 35),
-                                        sigmaTheta = c(25.5, 27.95))
+                'greenlandShelf' = list(theta = c(0, 5),
+                                        salinity = c(33, 35),
+                                        sigmaTheta = c(26.25, 27.75))
 )
-
+# levels of contours
 contourLevels <- list('full' = list(theta = seq(1.5, 5, 0.5),
                                     salinity = seq(34.6, 35, 0.05),
                                     sigmaTheta = seq(27.5, 27.95, 0.05)),
@@ -80,11 +81,22 @@ contourLevels <- list('full' = list(theta = seq(1.5, 5, 0.5),
                                              salinity = seq(32, 35, 0.5),
                                              sigmaTheta = seq(25.5, 27.95, 0.50)
                                              ),
-                      'greenlandShelf' = list(theta = seq(-2, 5, 1),
-                                              salinity = seq(32, 35, 0.5),
-                                              sigmaTheta = seq(25.5, 27.95, 0.50))
+                      'greenlandShelf' = list(theta = seq(0, 5, 1),
+                                              salinity = seq(33, 35, 0.5),
+                                              sigmaTheta = seq(26.25, 27.75, 0.25))
                       )
-contourLevelLimits <- limits # the same for now
+# limits for black and white text
+# any values outside limits above will be white
+contourLevelLimits <- list('full' = list(theta = c(2, 5),
+                                         salinity = c(34.6, 35),
+                                         sigmaTheta = c(27.5, 27.85)),
+                           'labradorShelf' = list(theta = c(0, 5),
+                                                  salinity = c(32.5, 35),
+                                                  sigmaTheta = c(25.5, 27.5)),
+                           'greenlandShelf' = list(theta = c(1.5, 5),
+                                                   salinity = c(33.6, 35),
+                                                   sigmaTheta = c(26.25, 27.5))
+)
 transectPlotLimits <- list(limits = limits,
                            contourLevels = contourLevels,
                            contourLevelLimits = contourLevelLimits)
