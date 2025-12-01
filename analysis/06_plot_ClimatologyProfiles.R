@@ -1,6 +1,4 @@
 rm(list=ls())
-fillWithSmooth <- FALSE # logical that decides if missing stations filled with smoothed climatology profiles should be used
-library(csasAtlPhys)
 data("transectPlotLimits")
 library(oce)
 plotProfile <- oce::plotProfile
@@ -22,12 +20,8 @@ allStationNames <- unlist(lapply(stations, function(k) k[['stationName']]))
 mround <- function(x,base){
   base*round(x/base)
 }
-
-if(fillWithSmooth){
-  load(paste(destDirData, 'climatologyFilled.rda', sep = '/'))
-} else {
-  load(paste(destDirData, 'climatology.rda', sep = '/'))
-}
+# load climatology
+load(paste(destDirData, 'climatology.rda', sep = '/'))
 
 climdf <- do.call('rbind', lapply(climatology, function(k) data.frame(transect = k[['transect']],
                                                                       climatology = k[['climatologyYears']][1])))

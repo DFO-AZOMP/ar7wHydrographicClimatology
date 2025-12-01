@@ -1,6 +1,5 @@
 rm(list=ls())
 library(oce)
-library(csasAtlPhys)
 library(sp) # for point.in.polygon
 source('00_setupFile.R')
 # define and read in file that documents mission names

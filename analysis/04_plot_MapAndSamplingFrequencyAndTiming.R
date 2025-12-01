@@ -1,5 +1,4 @@
 rm(list=ls())
-library(csasAtlPhys)
 library(oce)
 library(ocedata)
 data(coastlineWorldFine)

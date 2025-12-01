@@ -1,6 +1,5 @@
 rm(list=ls())
 library(oce)
-library(csasAtlPhys)
 library(sp) # for point.in.polygon
 source('00_setupFile.R') # has polygons and stations
 load(paste(destDirData, 'ctd.rda', sep = '/'))

@@ -1,5 +1,4 @@
 rm(list=ls())
-library(csasAtlPhys)
 library(oce)
 data("ctd")
 ghostctd <- ctd
