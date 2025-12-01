@@ -81,9 +81,9 @@ contourLevels <- list('full' = list(theta = seq(1.5, 5, 0.5),
                                              salinity = seq(32, 35, 0.5),
                                              sigmaTheta = seq(25.5, 27.95, 0.50)
                                              ),
-                      'greenlandShelf' = list(theta = seq(0, 5, 1),
-                                              salinity = seq(33, 35, 0.5),
-                                              sigmaTheta = seq(26.25, 27.75, 0.25))
+                      'greenlandShelf' = list(theta = seq(0, 5, 0.5),
+                                              salinity = seq(33, 35, 0.25),
+                                              sigmaTheta = seq(26.25, 27.75, 0.125))
                       )
 # limits for black and white text
 # any values outside limits above will be white
