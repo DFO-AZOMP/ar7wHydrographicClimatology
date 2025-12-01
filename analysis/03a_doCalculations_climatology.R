@@ -1,8 +1,4 @@
 rm(list=ls())
-# logical that decides if missing stations should be filled with smoothed climatology profiles
-# set to TRUE for 'final' climatology product
-# set to FALSE for climatology metrics for stations with sufficient sampling
-fillWithSmooth <- FALSE
 library(csasAtlPhys)
 library(oce)
 data("ctd")
@@ -306,106 +302,7 @@ for(it in 1:dim(lookdf)[1]){
       missingDf <- data.frame(station = missingStn,
                               climYear = missingStnClimMinYear,
                               transect = transectlook)
-      if(fillWithSmooth){
-        for(ims in 1:length(missingStn)){
-          stnlook <- missingStn[ims]
-          # code taken and adapted from 99_compareSectionSmoothToMissingProfiles.R
-          # 1. get the station longitude/latitude for the transect
-          #   note: as of 20210820 - missing stations only for halifax and lousibourg
-          transectlon <- switch(transectlook,
-                                'louisbourg' = unlist(lapply(louisbourgStationPolygons, function(k) k[['longitude']])),
-                                'halifaxInshore' = unlist(lapply(halifaxStationPolygons, function(k) k[['longitude']])))
-          transectlat <- switch(transectlook,
-                                'louisbourg' = unlist(lapply(louisbourgStationPolygons, function(k) k[['latitude']])),
-                                'halifaxInshore' = unlist(lapply(halifaxStationPolygons, function(k) k[['latitude']])))
-          transectStnName <- switch(transectlook,
-                                    'louisbourg' = unlist(lapply(louisbourgStationPolygons, function(k) k[['stationName']])),
-                                    'halifaxInshore' = unlist(lapply(halifaxStationPolygons, function(k) k[['stationName']])))
-          okstn <- which(transectStnName == stnlook)
-          stnlon <- transectlon[okstn]
-          stnlat <- transectlat[okstn]
-          # 2. get smoothed section longitude and latitude and water depth
-          sslon <- ss[['longitude', 'byStation']]
-          sslat <- ss[['latitude', 'byStation']]
-          sswaterDepth <- unlist(lapply(ss[['station']], function(k) k[['waterDepth']]))
-          # find closest smoothed profile, and subset it to the inferred waterdepth
-          dist <- geodDist(longitude2 = stnlon,
-                           latitude2 = stnlat,
-                           longitude1 = sslon,
-                           latitude1 = sslat)
-          okss <- which.min(dist)
-          ssctd <- ss[['station', okss]]
-          ssctd <- subset(ssctd, pressure <= sswaterDepth[okss])
-          # test to see if differences caused by averaging
-          ssctd[['pressure']] <- ssctd[['pressure']] - 5
-          # 3. modify some of the metadata so it can be slotted into the climatology
-          ssctd <- oceSetMetadata(ssctd,
-                                  'startTime',
-                                  paste(max(climatologyYears), fakeMonth, 15, sep = '-'))
-          ssctd <- oceSetMetadata(ssctd,
-                                  'longitude',
-                                  stnlon)
-          ssctd <- oceSetMetadata(ssctd,
-                                  'latitude',
-                                  stnlat)
-          ssctd <- oceSetMetadata(ssctd,
-                                  'stationName',
-                                  stnlook)
-          ssctd <- oceSetMetadata(ssctd,
-                                  'transect',
-                                  transectlook)
-          # 4. ssctd will be have dz = 5m, do binMeanPressureCtd averaging
-          #    use waterdepth to subset the depth bins
-          stnDepthBins <- transectDepthBins[transectDepthBins[['bin']] <= sswaterDepth[okss], ]
-          #ssctdsub <- binMeanPressureCtd(ssctd, bin = stnDepthBins[['bin']], tolerance = stnDepthBins[['tolerance']])
-          ssctdsub <- approxPressureCtd(ssctd, bin = stnDepthBins[['bin']])
-          tranCtd[[cnt]] <- ssctdsub
-          cnt <- cnt + 1
-        }
-        # repeat what was done above to create section and sectionsmooth
-        # order the stations
-        ddlon <- unlist(lapply(tranCtd, function(k) k[['longitude']]))
-        ddlat <- unlist(lapply(tranCtd, function(k) k[['latitude']]))
-        if(transectlook == 'brownsBank'){
-          o <- order(ddlat, decreasing = TRUE)
-        } else {
-          o <- order(ddlon)
-        }
-        tranCtd <- tranCtd[o]
-        # add fake station at the end for nicer interpolation
-        a <- getTransectAngle(longitude = unlist(lapply(tranCtd[(length(tranCtd)-1):length(tranCtd)], function(k) k[['longitude']][1])),
-                              latitude = unlist(lapply(tranCtd[(length(tranCtd)-1):length(tranCtd)], function(k) k[['latitude']][1])))
-        angle <- a$angle
-        eastingadd <- ((xr/3) * 1000) * cos(angle * pi/180) # not sure of factor in front of xr, changed xr to fixed distance, xr/2
-        northingadd <- ((xr/3) * 1000) * sin(angle * pi/180) # not sure of factor in front of xr, changed xr to fixed distance, xr/2
-        faked <- tranCtd[[length(tranCtd)]]
-        zone <- lonlat2utm(longitude = faked[['longitude']][1],
-                           latitude = faked[['latitude']][1])$zone
-        utm <- lonlat2utm(longitude = faked[['longitude']][1],
-                          latitude = faked[['latitude']], zone = zone)
-        fakelonlat <- utm2lonlat(easting = utm$easting + eastingadd,
-                                 northing = utm$northing + northingadd,
-                                 zone = zone)
-        faked[['longitude']] <- fakelonlat$longitude
-        faked[['latitude']] <- fakelonlat$latitude
-        tranCtd <- c(tranCtd, faked)
-        # # create section and barnes interpolate
-        s <- as.section(tranCtd)
-        sg <- sectionGrid(s)
-        factor <- ifelse(transectlook %in% c('halifaxInshore', 'halifaxExtended', 'louisbourg'), 2.5, 1.4)
-        xr <- mround(median(diff(sg[['distance', 'byStation']]))/2, 5) * factor
-        yr <- 10
-        xgrid <- seq(0, ceiling(max(sg[['distance', 'byStation']])) + 1.5*xr, by = xr/2)
-        # have to add the is.na part to not interpolate farther down than measurements
-        ygrid <- seq(5, ceiling(max(sg[['pressure']][!is.na(sg[['temperature']])])), by = yr/2)
-        ygrid <- seq(5, ceiling(max(sg[['pressure']][!is.na(sg[['temperature']])])), by = yr)
-        ss <- sectionSmooth(sg, method = 'barnes', xg = xgrid, yg = ygrid, xr = xr, yr = yr)
-      }
     } # closes create missing station data.frame
-    # remove last station from section smooth to get nicer xlim
-    # ssstn <- ss@data$station
-    # ssstn <- ssstn[-length(ssstn)]
-    # ss@data$station <- ssstn
     # save info
     climatology[[it]][['transect']] <- transectlook
     climatology[[it]][['longitude0']] <- longitude0
@@ -441,4 +338,4 @@ for(it in 1:dim(lookdf)[1]){
   }
 }
 
-save(climatology, file = paste(destDirData, paste0('climatology', ifelse(fillWithSmooth, 'Filled', ''), '.rda'), sep = '/'))
+save(climatology, file = paste(destDirData, 'climatology.rda', sep = '/'))
