@@ -1,5 +1,4 @@
 rm(list=ls())
-fillWithSmooth <- FALSE # logical that decides if missing stations filled with smoothed climatology profiles should be used
 library(oce)
 library(csasAtlPhys)
 library(cmocean)
@@ -83,7 +82,7 @@ for(it in 1:dim(dftran)[1]){
                          paste0(paste('07_climatologyComparison',
                                       dftran[['transect']][it],
                                       region,
-                                      sep = '_'), ifelse(fillWithSmooth, '_Filled', ''), '.png'), sep = '/'),
+                                      sep = '_'), '.png'), sep = '/'),
         #width = 11, height = ifelse(length(d) == 3, 6, 2.8), units = 'in',
         width = width, height = height, units = 'in',
         res = 200, pointsize = 10)
