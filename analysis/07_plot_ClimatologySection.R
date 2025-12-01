@@ -139,9 +139,9 @@ for(it in 1:dim(dftran)[1]){
           next
         } else {
           # set up various plotting parameters
-          zlim <- transectPlotLimits[['limits']][[region]][[gsub('Avg', '', text)]]
-          levels <- transectPlotLimits[['contourLevels']][[region]][[gsub('Avg', '', text)]]
-          levelLimits <- transectPlotLimits[['contourLevelLimits']][[region]][[gsub('Avg', '', text)]]
+          zlim <- transectPlotLimits[['limits']][[region]][[gsub('Avg', '', var)]]
+          levels <- transectPlotLimits[['contourLevels']][[region]][[gsub('Avg', '', var)]]
+          levelLimits <- transectPlotLimits[['contourLevelLimits']][[region]][[gsub('Avg', '', var)]]
           if(var == 'temperatureAnomaly'){
             zlim <- range(seq(-7,7,1)/8)
             levels <- levels/8
