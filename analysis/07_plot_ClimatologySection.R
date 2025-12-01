@@ -16,11 +16,8 @@ transectPoly <- function(x, y, yadj = 50){
   ypoly <- c(y[1], y, y[length(y)], max(y) + yadj, max(y) + yadj, y[1])
   return(list(xpoly = xpoly, ypoly = ypoly))
 }
-if(fillWithSmooth){
-  load(paste(destDirData, 'climatologyFilled.rda', sep = '/'))
-} else {
-  load(paste(destDirData, 'climatology.rda', sep = '/'))
-}
+# load climatology
+load(paste(destDirData, 'climatology.rda', sep = '/'))
 # load transectDefinition
 load("ar7wTransectDefinition.rda")
 transectDefinitions <- list(ar7w = ar7wTransectDefinition)
@@ -81,14 +78,11 @@ for(it in 1:dim(dftran)[1]){
     height <- 3.875 * 2
     width <- 3.25 * 1.5
     mfrow <- c(3,1)
-    region <- ifelse(is.na(dftran[['region']][it]), 'full', dftran[['region']][it])
+    region <- dftran[['region']][it]
     png(filename = paste(destDirFigures,
                          paste0(paste('07_climatologyComparison',
                                       dftran[['transect']][it],
                                       region,
-                                      # dftran[['transect']][it],
-                                      # dftran[['season']][it],
-                                      # dftran[['program']][it],
                                       sep = '_'), ifelse(fillWithSmooth, '_Filled', ''), '.png'), sep = '/'),
         #width = 11, height = ifelse(length(d) == 3, 6, 2.8), units = 'in',
         width = width, height = height, units = 'in',
@@ -145,9 +139,9 @@ for(it in 1:dim(dftran)[1]){
           next
         } else {
           # set up various plotting parameters
-          zlim <- transectPlotLimits[['limits']][[region]][[var]]
-          levels <- transectPlotLimits[['contourLevels']][[region]][[var]]
-          levelLimits <- transectPlotLimits[['contourLevelLimits']][[region]][[var]]
+          zlim <- transectPlotLimits[['limits']][[region]][[gsub('Avg', '', text)]]
+          levels <- transectPlotLimits[['contourLevels']][[region]][[gsub('Avg', '', text)]]
+          levelLimits <- transectPlotLimits[['contourLevelLimits']][[region]][[gsub('Avg', '', text)]]
           if(var == 'temperatureAnomaly'){
             zlim <- range(seq(-7,7,1)/8)
             levels <- levels/8
