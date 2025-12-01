@@ -2,7 +2,13 @@
 
 ## Classifying transects and stations
 
-Prior to characterizing which station occupations belong to the AR7W transect and its stations, a methodology had to be developed. Using the station locations, Table \@ref(tab:stationCoordinates), a transect polygon was constructed, as well as polygons for each station. For the transect polygon, the first and last station was used to calculate the angle of the transect. A polygon with an arbitrarily chosen width of 14km was constructed. A polygon for each individual station was also created, these were aligned with the angle of the transect polygon. A width, here meaning along-slope, of 14km was used for consistency with the transect polygon, as well as for the length, here meaning cross-slope. In some cases, the stations are less than 14km km apart, therefore, to prevent overlap between station polygons, the inter-station distance was used for the length.
+The AR7W consists of 28 core stations covering the Labrador Shelf (AR7W-W), stations AR7W_01 to AR7W_10, across the central Labrador Sea (AR7W-C), stations AR7W_11 to AR7W_23, and the Greenland shelf (AR7W-E), stations AR7W_24 to AR7W_28 (Figure \@ref(fig:map)) [@li2014]. Half stations were added between stations along AR7W-C and AR7W-E to increase the sampling in the eastern and western boundary current of the Labrador Sea where horizontal gradients in ocean properties can be large.
+
+Prior to characterizing which station occupations belong to the AR7W transect and its stations, a methodology had to be developed. Using the station locations, Table \@ref(tab:stationCoordinates), a transect polygon was constructed, as well as polygons for each station. For the transect polygon, the first and last station was used to calculate the angle of the transect. A polygon with a width of 14km was constructed. A polygon for each individual station was also created, these were aligned with the angle of the transect polygon. A width, here meaning along-slope, of 14km was used for consistency with the transect polygon, as well as for the length, here meaning cross-slope. In some cases, the stations are less than 14km apart, therefore, to prevent overlap between station polygons, the inter-station distance was used for the length.
+
+## Climatology reference period
+
+For monitoring efforts, the World Meteorological Organization (WMO) recommends using reference period of years 1961 to 1990 as well as the most recent three decades [@wmo2017]. Since the inception of the AZOMP was much later than the proposed reference period and available data within some reasonably defined area for each station is assumed to be sparse, calculations using the reference period for years 1961 to 1990 will not be considered. Instead, the most recent overlapping three-decade periods, years 1991 to 2020, will be presented.
 
 ## Vertical binning
 
@@ -14,4 +20,4 @@ The date range used to define the climatology is 01 May to 30 June, inclusive. D
 
 ## Minimum criteria
 
-The AZOMP is, relative to climate timescales, young, with program sampling occurring for most of the recent reference period (1991 to 2020). To ensure that each station’s climatology was calculated with adequate coverage, a minimum criterion was set. The minimum of at least one occupation for any 10 years within the 30-year period was used.
+The occupation of AR7W through WOCE and AZOMP is, relative to climate timescales, young, with program sampling occurring for most of the recent reference period (1991 to 2020). To ensure that each station’s climatology was calculated with adequate coverage, a minimum criterion was set. The minimum of at least one occupation for any 10 years within the 30-year period was used.
