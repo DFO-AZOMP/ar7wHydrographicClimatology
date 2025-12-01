@@ -83,7 +83,7 @@ for(it in 1:dim(dftran)[1]){
     mfrow <- c(3,1)
     region <- ifelse(is.na(dftran[['region']][it]), 'full', dftran[['region']][it])
     png(filename = paste(destDirFigures,
-                         paste0(paste('11_climatologyComparison',
+                         paste0(paste('07_climatologyComparison',
                                       dftran[['transect']][it],
                                       region,
                                       # dftran[['transect']][it],

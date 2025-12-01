@@ -13,7 +13,7 @@ figurePath <- paste(path,
 
 ```{r map, fig.cap = "(ref:fig-map)", out.width="75%"}
 <<analysisPath>>
-knitr::include_graphics(path = paste(figurePath, '09_stationMap_ar7w.png', sep = '/'))
+knitr::include_graphics(path = paste(figurePath, '04_stationMap_ar7w.png', sep = '/'))
 ```
 
 (ref:fig-samplingTimeRange) Sampling date ranges, inferred from the CTD profiles, for the AR7W. Vertical black dashed lines indicates the defined date ranges, 01 May to 30 June, for the climatology.
@@ -27,14 +27,14 @@ knitr::include_graphics(path = paste(figurePath, '05_missionTimeRange.png', sep 
 
 ```{r ar7wSamplingTiming, fig.cap = "(ref:fig-ar7wSamplingTiming)", out.width="90%"}
 <<analysisPath>>
-knitr::include_graphics(path = paste(figurePath, '09_samplingTiming_ar7w.png', sep = '/'))
+knitr::include_graphics(path = paste(figurePath, '04_samplingTiming_ar7w.png', sep = '/'))
 ```
 
 (ref:fig-ar7wSamplingFrequency) Sampling frequency at each station. A light red filled box indicates that the station was not sampled, reiterated by the number zero in the box. A light green filled box indicates that the station was sampled the expected number of times, which is one. A dark green filled box indicates that the station was sampled more than the expected number of times with the total number of occupations indicated in the box. The number on the right axis indicates the number of years the station was sampled at least once followed by the number of years the station was occupied within the defined date ranges. Station names in bold on the left axis indicates that the station does not meet the minimum requirements.
 
 ```{r ar7wSamplingFrequency, fig.cap = "(ref:fig-ar7wSamplingFrequency)", out.width="90%"}
 <<analysisPath>>
-knitr::include_graphics(path = paste(figurePath, '09_samplingFrequency_ar7w.png', sep = '/'))
+knitr::include_graphics(path = paste(figurePath, '04_samplingFrequency_ar7w.png', sep = '/'))
 ```
 
 
@@ -44,8 +44,8 @@ knitr::include_graphics(path = paste(figurePath, '09_samplingFrequency_ar7w.png'
 ## copy these lines for each profile chunk
 <<analysisPath>>
 transect <- 'ar7w'
-figures <- list.files(path = figurePath, pattern = paste0('10_profileAndDifference_',transect,'_.*wData.png'), full.names = TRUE)
-station <- gsub(paste0('10_profileAndDifference_', transect, '_(.*)_wData\\.png'),'\\1', basename(figures))
+figures <- list.files(path = figurePath, pattern = paste0('06_profileAndDifference_',transect,'_.*wData.png'), full.names = TRUE)
+station <- gsub(paste0('06_profileAndDifference_', transect, '_(.*)_wData\\.png'),'\\1', basename(figures))
 stationNumber <- as.numeric(gsub('AR7W', '', station))
 stationText <- gsub('(AR7W)(\\d+)', '\\1\\\\_\\2', station)
 ##
@@ -65,7 +65,7 @@ knitr::include_graphics(rfigures)
 
 ```{r ar7ww, out.width = "75%", fig.cap = "(ref:fig-ar7ww)"}
 <<analysisPath>>
-knitr::include_graphics(path = paste(figurePath, '11_climatologyComparison_ar7w_labradorShelf.png', sep = '/'))
+knitr::include_graphics(path = paste(figurePath, '07_climatologyComparison_ar7w_labradorShelf.png', sep = '/'))
 ```
 
 <!-- AR7W-C -->
@@ -74,8 +74,8 @@ knitr::include_graphics(path = paste(figurePath, '11_climatologyComparison_ar7w_
 ## copy these lines for each profile chunk
 <<analysisPath>>
 transect <- 'ar7w'
-figures <- list.files(path = figurePath, pattern = paste0('10_profileAndDifference_',transect,'_.*wData.png'), full.names = TRUE)
-station <- gsub(paste0('10_profileAndDifference_', transect, '_(.*)_wData\\.png'),'\\1', basename(figures))
+figures <- list.files(path = figurePath, pattern = paste0('06_profileAndDifference_',transect,'_.*wData.png'), full.names = TRUE)
+station <- gsub(paste0('06_profileAndDifference_', transect, '_(.*)_wData\\.png'),'\\1', basename(figures))
 stationNumber <- as.numeric(gsub('AR7W', '', station))
 stationText <- gsub('(AR7W)(\\d+)', '\\1\\\\_\\2', station)
 ##
@@ -97,7 +97,7 @@ knitr::include_graphics(rfigures)
 
 ```{r ar7wc, out.width = "75%", fig.cap = "(ref:fig-ar7wc)"}
 <<analysisPath>>
-knitr::include_graphics(path = paste(figurePath, '11_climatologyComparison_ar7w_full.png', sep = '/'))
+knitr::include_graphics(path = paste(figurePath, '07_climatologyComparison_ar7w_full.png', sep = '/'))
 ```
 
 <!-- AR7W-E -->
@@ -106,8 +106,8 @@ knitr::include_graphics(path = paste(figurePath, '11_climatologyComparison_ar7w_
 ## copy these lines for each profile chunk
 <<analysisPath>>
 transect <- 'ar7w'
-figures <- list.files(path = figurePath, pattern = paste0('10_profileAndDifference_',transect,'_.*wData.png'), full.names = TRUE)
-station <- gsub(paste0('10_profileAndDifference_', transect, '_(.*)_wData\\.png'),'\\1', basename(figures))
+figures <- list.files(path = figurePath, pattern = paste0('06_profileAndDifference_',transect,'_.*wData.png'), full.names = TRUE)
+station <- gsub(paste0('06_profileAndDifference_', transect, '_(.*)_wData\\.png'),'\\1', basename(figures))
 stationNumber <- as.numeric(gsub('AR7W', '', station))
 stationText <- gsub('(AR7W)(\\d+)', '\\1\\\\_\\2', station)
 ##
@@ -127,5 +127,5 @@ knitr::include_graphics(rfigures)
 
 ```{r ar7we, out.width = "75%", fig.cap = "(ref:fig-ar7we)"}
 <<analysisPath>>
-knitr::include_graphics(path = paste(figurePath, '11_climatologyComparison_ar7w_greenlandShelf.png', sep = '/'))
+knitr::include_graphics(path = paste(figurePath, '07_climatologyComparison_ar7w_greenlandShelf.png', sep = '/'))
 ```

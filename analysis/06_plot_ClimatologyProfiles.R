@@ -172,7 +172,7 @@ for(i in 1:dim(utran)[1]){
     ## pressure limits
     allP <- unlist(lapply(dd, '[[', 'pressure'))
     plim <- rev(range(allP, na.rm = TRUE))
-    filename <- paste0(paste('10_profileAndDifference',
+    filename <- paste0(paste('06_profileAndDifference',
                              look[['transect']],
                              gsub('_', '', stn),
                              'wData',

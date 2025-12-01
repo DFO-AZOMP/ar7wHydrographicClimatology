@@ -67,7 +67,7 @@ palettemar <- c(3.5, 0, 1, 0)
 mapmar <- c(3, 3, 1, 1)
 for(i in 1:length(tbl)){
   png(paste(destDirFigures,
-            paste0(paste('09_stationMap',
+            paste0(paste('04_stationMap',
                          names(tbl)[i],
                          sep = '_'),
                    '.png'),
@@ -139,7 +139,7 @@ for(i in 1:length(tbl)){
   mapScalebar('topleft', length = 200)
   dev.off()
   png(paste(destDirFigures,
-            paste0(paste('09_samplingFrequency',
+            paste0(paste('04_samplingFrequency',
                          names(tbl)[i],
                          sep = '_'),
                    '.png'),
@@ -219,7 +219,7 @@ for(i in 1:length(tbl)){
   dev.off()
   # plot sampling timing
   png(paste(destDirFigures,
-            paste0(paste('09_samplingTiming',
+            paste0(paste('04_samplingTiming',
                          names(tbl)[i],
                          sep = '_'),
                    '.png'),
