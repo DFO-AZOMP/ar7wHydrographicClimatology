@@ -90,7 +90,7 @@ for(it in 1:dim(dftran)[1]){
     mar <- c(1.5, 3.5, 1.5, 2)
     par(mfrow = mfrow, mar = mar, oma = oma)
     for(i in 1:ifelse(length(d) == 3, 2, length(d))){
-      s <- d[[i]][['sectionSmooth']]
+      s <- d[[i]][['sectionSmooth']][[region]]
       sctd <- d[[i]][['avgProfiles']]
       lon0 <- d[[i]][['longitude0']]
       lat0 <- d[[i]][['latitude0']]

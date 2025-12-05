@@ -46,13 +46,36 @@ tolerance <- do.call('c', tolerance)
 transectDepthBins <- data.frame(bin = bin,
                                 tolerance = tolerance)
 ####
-# subset to only core stations, aka not 'half' stations
-# decision : keep all stations, implement min number of occupations
+# subset to only core stations, aka not 'half' stations ?
+# decision : keep all stations, implement min number of occupations (see above)
 ####
 # stnName <- lapply(stations, '[[', 'stationName')
 # stnNumber <- lapply(stnName, function(k) as.numeric(gsub('\\w+_(\\w+)', '\\1', k)))
 # iscore <- unlist(lapply(stnNumber, function(k) k == round(k)))
 # stations <- stations[iscore]
+
+####
+# define some values for smoothing the section
+####
+# set xr based on region
+ar7wStns <- unlist(lapply(ar7wStationPolygons, '[[', 'stationName'))
+ar7wLon <- unlist(lapply(ar7wStationPolygons, '[[', 'longitude'))
+ar7wLat <- unlist(lapply(ar7wStationPolygons, '[[', 'latitude'))
+xradd <- NULL
+for(rs in 1:length(regionStations)){
+  ok <- ar7wStns %in% regionStations[[rs]]
+  regdist <- geodDist(longitude1 = ar7wLon[ok],
+                      latitude1 = ar7wLat[ok])
+  regxr <- mround(median(diff(regdist)), 5, type = 'ceiling') * 2.0
+  xradd <- c(xradd, regxr)
+}
+dfxr <- data.frame(region = names(regionStations),
+                   xr = xradd)
+# set yr based on region
+yradd <- rep(50, dim(dfxr)[1])
+yradd[dfxr[['region']] %in% c('labradorShelf', 'greenlandShelf')] <- 15
+dfsmoothparam <- data.frame(dfxr,
+                            yr = yradd)
 
 # get some important meta for knowing which profile belongs to which
 startTime <- as.POSIXct(unlist(lapply(ctd, function(k) k[['startTime']])), origin = '1970-01-01', tz = 'UTC')
@@ -273,13 +296,31 @@ for(it in 1:dim(lookdf)[1]){
     tranCtd <- c(tranCtd, faked)
     # # create section and barnes interpolate
     s <- as.section(tranCtd)
-    sg <- sectionGrid(s)
-    # set parameters for interpolation
-    xgrid <- seq(0, ceiling(max(sg[['distance', 'byStation']])) + 1.5*xr, by = xr/2)
-    # have to add the is.na part to not interpolate farther down than measurements
-    ygrid <- seq(5, ceiling(max(sg[['pressure']][!is.na(sg[['temperature']])])), by = yr/2)
-    ygrid <- seq(5, ceiling(max(sg[['pressure']][!is.na(sg[['temperature']])])), by = yr)
-    ss <- sectionSmooth(sg, method = 'barnes', xg = xgrid, yg = ygrid, xr = xr, yr = yr)
+    # set pressure levels, minimum across dd and max
+    allp <- unlist(lapply(tranCtd, '[[', 'pressure'))
+    okmin <- which.min(abs(min(allp) - transectDepthBins[['bin']]))
+    okmax <- which.min(abs(max(allp) - transectDepthBins[['bin']]))
+    plevels <- transectDepthBins[['bin']][okmin:okmax]
+    sg <- sectionGrid(s, p = plevels)
+    ## do separate smoothed sections for each region
+    if(transectlook == 'ar7w'){
+      ss <- vector(mode = 'list', length = dim(dfsmoothparam)[1])
+      for(ir in 1:dim(dfsmoothparam)[1]){
+        lookparam <- dfsmoothparam[ir, ]
+        xgrid <- seq(0, ceiling(max(sg[['distance', 'byStation']])) + xr, by = xr/2)
+        ygrid <- seq(min(plevels), max(plevels), by = lookparam[['yr']])
+        ss[[ir]] <- sectionSmooth(sg, method = 'barnes',
+                                  xg = xgrid, yg = ygrid,
+                                  xr = lookparam[['xr']], yr = lookparam[['yr']])
+      }
+      names(ss) <- dfsmoothparam[['region']]
+    } else {
+      # set parameters for interpolation
+      xgrid <- seq(0, ceiling(max(sg[['distance', 'byStation']])) + xr, by = xr/2)
+      # have to add the is.na part to not interpolate farther down than measurements
+      ygrid <- seq(5, ceiling(max(sg[['pressure']][!is.na(sg[['temperature']])])), by = yr)
+      ss <- sectionSmooth(sg, method = 'barnes', xg = xgrid, yg = ygrid, xr = xr, yr = yr)
+    }
     # get some meta data things for plotting that was defined previously
     # get bottom polygon
     okdef <- which(names(transectDefinitions) %in% transectlook)
