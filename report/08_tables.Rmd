@@ -23,7 +23,7 @@ csasdown::csas_table(x = table,
                      format = 'latex')
 ```
 
-(ref:tab-missionIds) The year and mission names, following the defined Bedford Institute of Oceanography convention for years 1993 to 2020. For year 1992, it is the CCHDO expocode for the mission. No entry in a given cell indicates that a mission did not occur.
+(ref:tab-missionIds) The year and mission names, following the defined Bedford Institute of Oceanography convention. No entry in a given cell indicates that a mission did not occur.
 
 ```{r missionIds, echo = FALSE, warning = FALSE, message = FALSE, results = 'asis'}
 library(xtable)
