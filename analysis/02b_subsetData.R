@@ -3,8 +3,6 @@ library(oce)
 library(sp) # for point.in.polygon
 source('00_setupFile.R') # has polygons and stations
 load(paste(destDirData, 'ctd.rda', sep = '/'))
-load(paste(destDirData, 'ctdgo.rda', sep = '/'))
-ctd <- c(ctd, ctdgo)
 # only concerned with ar7w
 load('ar7wPolygon.rda')
 polygons <- list(ar7w = ar7wPolygon) # re-name for ease
