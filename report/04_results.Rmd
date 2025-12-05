@@ -65,8 +65,8 @@ On the Labrador shelf, AR7W-W, the median number of years a core station was sam
 ## copy these lines for each profile chunk
 <<analysisPath>>
 transect <- 'ar7w'
-figures <- list.files(path = figurePath, pattern = paste0('10_profileAndDifference_',transect,'_.*wData.png'), full.names = TRUE)
-station <- gsub(paste0('10_profileAndDifference_', transect, '_(.*)_wData\\.png'),'\\1', basename(figures))
+figures <- list.files(path = figurePath, pattern = paste0('06_profileAndDifference_',transect,'_.*wData.png'), full.names = TRUE)
+station <- gsub(paste0('06_profileAndDifference_', transect, '_(.*)_wData\\.png'),'\\1', basename(figures))
 stationNumber <- as.numeric(gsub('AR7W', '', station))
 stationText <- gsub('(AR7W)(\\d+)', '\\1\\\\_\\2', station)
 ##
@@ -102,8 +102,8 @@ In the central Labrador sea, AR7W-C, the median number of years a core station w
 ## copy these lines for each profile chunk
 <<analysisPath>>
 transect <- 'ar7w'
-figures <- list.files(path = figurePath, pattern = paste0('10_profileAndDifference_',transect,'_.*wData.png'), full.names = TRUE)
-station <- gsub(paste0('10_profileAndDifference_', transect, '_(.*)_wData\\.png'),'\\1', basename(figures))
+figures <- list.files(path = figurePath, pattern = paste0('06_profileAndDifference_',transect,'_.*wData.png'), full.names = TRUE)
+station <- gsub(paste0('06_profileAndDifference_', transect, '_(.*)_wData\\.png'),'\\1', basename(figures))
 stationNumber <- as.numeric(gsub('AR7W', '', station))
 stationText <- gsub('(AR7W)(\\d+)', '\\1\\\\_\\2', station)
 ##
@@ -141,8 +141,8 @@ On the Greenland shelf, AR7W-E, the median number of years a core station was sa
 ## copy these lines for each profile chunk
 <<analysisPath>>
 transect <- 'ar7w'
-figures <- list.files(path = figurePath, pattern = paste0('10_profileAndDifference_',transect,'_.*wData.png'), full.names = TRUE)
-station <- gsub(paste0('10_profileAndDifference_', transect, '_(.*)_wData\\.png'),'\\1', basename(figures))
+figures <- list.files(path = figurePath, pattern = paste0('06_profileAndDifference_',transect,'_.*wData.png'), full.names = TRUE)
+station <- gsub(paste0('06_profileAndDifference_', transect, '_(.*)_wData\\.png'),'\\1', basename(figures))
 stationNumber <- as.numeric(gsub('AR7W', '', station))
 stationText <- gsub('(AR7W)(\\d+)', '\\1\\\\_\\2', station)
 ##
