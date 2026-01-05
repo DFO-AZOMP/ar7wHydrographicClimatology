@@ -51,6 +51,7 @@ rsconnect/
 # any produced data files
 analysis/*.rda
 analysis/netCDFclimatology
+analysis/csvClimatology
 analysis/*.nc
 
 # any figures
