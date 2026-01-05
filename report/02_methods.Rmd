@@ -12,7 +12,7 @@ For monitoring efforts, the World Meteorological Organization (WMO) recommends u
 
 ## Vertical binning
 
-Defined depth bins follow the World Ocean Atlas standard levels which are every 5m from 0 to 100m with a tolerance of 2.5m, every 25m from 125 to 500m with a tolerance of 12.5m, every 50m from 550 to 2000m with a tolerance of 25m, and every 100m from 2100 to 4000m with a tolerance of 50m [@reagan2023woa]. The 0 to 10m bins were omitted from the analysis due to relatively low data coverage and quality. The maximum depth bin for each station is the closest bin to the median of the maximum pressure value from all profiles for the climatology reference period. Therefore, in some cases for the climatology profile plots it will appear that data is available deeper than calculated.
+Defined depth bins follow the World Ocean Atlas standard levels which are every 5m from 0 to 100m, every 25m from 125 to 500m, every 50m from 550 to 2000m, and every 100m from 2100 to 4000m [@reagan2023woa]. The 0 to 10m bins were omitted from the analysis due to relatively low data coverage and quality. The maximum depth bin for each station is the closest bin to the median of the maximum pressure value from all profiles for the climatology reference period. Therefore, in some cases for the climatology profile plots it will appear that data is available deeper than calculated.
 
 ## Date ranges
 
