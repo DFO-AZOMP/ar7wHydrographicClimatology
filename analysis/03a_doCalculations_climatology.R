@@ -293,6 +293,7 @@ for(it in 1:dim(lookdf)[1]){
                              zone = zone)
     faked[['longitude']] <- fakelonlat$longitude
     faked[['latitude']] <- fakelonlat$latitude
+    faked[['stationName']] <- 'fakeStn'
     tranCtd <- c(tranCtd, faked)
     # # create section and barnes interpolate
     s <- as.section(tranCtd)
