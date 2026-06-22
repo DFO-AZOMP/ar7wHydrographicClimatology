@@ -2,7 +2,7 @@
 title: "Atlantic Repeat Hydrography Line 7 West 1991 to 2020 Hydrographic Climatology"
 french_title: "Atlantic Repeat Hydrography Line 7 West 1991 to 2020 Hydrographic Climatology"
 year: 2026
-report_number: nnn
+report_number: 231
 author: |
   Chantelle Layton^1^
   Blair Greenan^1^
@@ -11,8 +11,8 @@ author: |
 author_list: "Layton, C., Greenan, B., and Wang, Z."
 region: Maritimes Region
 french_region: Région du Maritimes
-isbn: ""
-report_DOI: "##.####/xxxxx" # do not include https://doi.org/
+isbn: "978-0-662-03952-5"
+report_DOI: "10.60825/ks35-f584" # do not include https://doi.org/
 address: |
   ^1^Fisheries and Oceans Canada\
      Bedford Institute of Oceanography\
@@ -27,9 +27,9 @@ french_address: |
 phone: "(555) 555-5555"
 author_footnote: "Email:Chantelle.Layton@dfo-mpo.gc.ca # | telephone: (250) 756-5555"
 abstract: |
-  The hydrographic 1991 to 2020 climatology for the Atlantic Repeat Hydrography Line 7 West is calculated to support annual reporting on variability. Details on data coverage and a brief summary on the results are provided.
+  The field phase of the World Ocean Circulation Experiment, designed to address inadequate coverage of the world ocean, was executed through international collaboration over the period 1990 to 1998. A major Canadian contribution was a dedicated program in the Labrador Sea, specifically the Atlantic Repeat Hydrography Line 7 West. Canada continues to occupy this line annually through the Atlantic Zone Off-Shelf Monitoring Program. Here, the hydrographic 1991 to 2020 climatology for stations along the line are calculated to support annual reporting on variability. Details on data coverage and a brief summary on the results are provided.
 french_abstract: |
-  Voici le résumé. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  La phase de terrain de l'Expérience sur la circulation océanique mondiale, conçue pour pallier la couverture insuffisante des océans du globe, a été menée dans le cadre d'une collaboration internationale entre 1990 et 1998. L'une des principales contributions canadiennes a consisté en un programme spécifique mené en mer du Labrador, plus précisément sur la ligne hydrographique répétitive 7 Ouest de l'Atlantique. Le Canada continue d'occuper cette ligne chaque année dans le cadre du Programme de monitorage de la zone Atlantique au large du plateau continental. Dans le présent document, la climatologie des paramètres hydrographiques de 1991 à 2020 pour les stations situées le long de cette ligne est calculée afin d'étayer les analyses annuelles de la variabilité. Des détails sur la couverture des données et un sommaire des résultats sont fournis.
 # `show_continued_text` is a logical which, if `true`, places
 # "Continued on the next page..." and "...Continued from the previous page" or
 # the french equivalents (if `french` = `true`) on all long tables created
