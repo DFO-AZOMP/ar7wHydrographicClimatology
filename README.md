@@ -2,7 +2,7 @@
 
 ## Overview 
 
-Repository for the "Atlantic Zone Off-shelf Monitoring Program 1991 to 2020 AR7W Hydrographic Climatology" report published in XXXX.
+Repository for the [Atlantic Repeat Hydrography Line 7 West 1991 to 2020 Hydrographic Climatology](https://waves-vagues.dfo-mpo.gc.ca/library-bibliotheque/41333871.pdf) report published in 2026.
 It contains all necessary scripts to run the analysis and create the report. It does not contain any data files or figures.
 The directory structure is as follows :
 
